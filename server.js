@@ -31,8 +31,8 @@ app.use(logger('dev'));
 
 // Listen (start app with node server.js)
 const options = {
-    key: process.env.NODE_ENV !== 'dev' ? fs.readFileSync('./certs/openvidukey.pem') : fs.readFileSync('./certs/privateKey-rsa.key'),
-    cert: process.env.NODE_ENV !== 'dev' ? fs.readFileSync('./certs/openviducert.pem') : fs.readFileSync('./certs/publicKey.crt')
+    key: process.env.NODE_ENV === 'dev' ? fs.readFileSync('./certs/openvidukey.pem') : fs.readFileSync('./certs/privateKey-rsa.key'),
+    cert: process.env.NODE_ENV === 'dev' ? fs.readFileSync('./certs/openviducert.pem') : fs.readFileSync('./certs/publicKey.crt')
 };
 
 https.createServer(options, app).listen(5000);
