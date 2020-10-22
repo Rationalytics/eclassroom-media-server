@@ -119,6 +119,9 @@ router.get('/session/:lectureId', (req, res) => {
                             .catch(error => {
                                 return res.status(500).json({ message: 'Cannot generate token' });
                             });
+                    },
+                    onreject => {
+                        console.error(onreject);
                     })
                     .catch(error => {
                         console.error(error);
