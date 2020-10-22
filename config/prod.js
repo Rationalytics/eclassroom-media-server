@@ -4,7 +4,7 @@ module.exports = {
     fast2SmsApiKey: 'm2Hwu8MDgN0OdFtBoy5G67IQ34YlXkRAVKqearLnsfWiSvxbTCk4d63GXWsNh1o8aemBDuOizIq7jSCF',
     urlShortnerApi: '6c176f94d0654297608527d30ad13919559f2',
     clientUrl: 'https://meraclass.in',
-    openViduUrl: 'https://localhost:4443',
+    openViduUrl: 'http://localhost:5443',
     openViduSecret: 'MY_SECRET',
     uuidNameSpace: '0be5053e-8df3-4106-b3c4-d606fe986cf4',
 };
