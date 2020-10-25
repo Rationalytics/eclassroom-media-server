@@ -10,12 +10,10 @@ const router = express.Router();
 const keys = require('../config/keys');
 const OV = new OpenVidu(keys.openViduUrl, keys.openViduSecret);
 
+const utils = require('../helpers/utils');
+
 let mapSessions = {};
 let mapSessionNamesTokens = {};
-
-function getBasicAuth() {
-    return 'Basic ' + (new Buffer('OPENVIDUAPP:' + keys.openViduSecret).toString('base64'));
-}
 
 /**
  * @description Express authorization middleware.
@@ -161,7 +159,7 @@ router.post('/leave-session', (req, res) => {
         }
 
         try {
-            const sess = await axios.get(keys.openViduUrl + 'api/sessions/' + sessionId, { headers: { Authorization: getBasicAuth() }});
+            const sess = await axios.get(keys.openViduUrl + 'api/sessions/' + sessionId, { headers: { Authorization: utils.getBasicAuth() }});
 
             if (sess.status === 200) {
                 const deleteConn = await axios.delete(
@@ -199,7 +197,7 @@ router.post('/leave-session', (req, res) => {
                         }
                     }
 
-                    axios.get(keys.openViduUrl + 'api/sessions/' + sessionId, { headers: { Authorization: getBasicAuth() }})
+                    axios.get(keys.openViduUrl + 'api/sessions/' + sessionId, { headers: { Authorization: utils.getBasicAuth() }})
                         .then(async (updatedSession) => {
                             const session = updatedSession.data;
 

@@ -1,6 +1,7 @@
 'use strict';
 const express = require('express');
 const fs = require('fs');
+const path = require('path');
 const session = require('express-session');
 const cors = require('cors');
 const https = require('https');
@@ -17,7 +18,7 @@ app.use(session({
     resave: false,
     secret: keys.openViduSecret
 }));
-// app.use(express.static(__dirname + '/public')); // Set the static files location
+
 app.use(bodyParser.urlencoded({
     'extended': 'true'
 })); // Parse application/x-www-form-urlencoded
@@ -37,7 +38,6 @@ const options = {
 
 https.createServer(options, app).listen(5000);
 
-console.log("App listening on port 5000 in environment " + process.env.NODE_ENV);
 
 /* REST API */
 app.use('/auth', authRouter);

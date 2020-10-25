@@ -2,7 +2,7 @@
 const keys = require('../config/keys');
 
 module.exports = {
-    getBasicAuth = function() {
+    getBasicAuth() {
         return 'Basic ' + (new Buffer('OPENVIDUAPP:' + keys.openViduSecret).toString('base64'));
     }
 }
