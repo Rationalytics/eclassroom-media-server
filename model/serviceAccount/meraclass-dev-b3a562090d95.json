@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "meraclass-dev",
+  "private_key_id": "b3a562090d957a7bc64023bb1827f8c6d4e7e4d6",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDxGEEzjqphOFzo\nyG++ZrztR0flYQMm7tDCCwYcOZNOtl80ANbQcLAKGXMqfN9bkZsXKxg7NtFGdlsb\nkxTBxfh0tirBQr2X9RMqCjDeeMwoUEobjCZNuGnweFHrzbngFl1SHQZrC0yfZrXY\nCgoyhPs4MHhyTZEmXsmTW8X0OsZtCBWBXMxOAvxrKEKeA8GFKnrdI1ApRLFToJ3q\n3cX2jnX3K6nGD2stjpQC3snZlb8UB+Tb3uKofH7IE9p7z/SyzvQocLkSJ6nicj7U\nL9Ksf8/cgldcSHqo8mu42ZNC7c5bE/dpZPJIH9lCbaWZfprbmeeM9KcbRRAgfS2M\nUjTObsZdAgMBAAECggEAHIn0N+Pop7r6BoUpcxaqwQSpzk16R8rHs9yFs+Qd25ir\nctaxlvlr4Torf4lKEEcPXoH3q5S815QtizlRIPHsC/a/X2Kk2j7ErrqHl+IhOpls\neE/R/eu5QKGhguH2oX/MOqrcZmHvR0QrfOANXncO3NMiAtfLOYlJX7Pinhsx/1hV\nkE6M8SjZXzsoIM+qpXeZ2kQLtfGMDrdemiZuDQbnrs1GvR+AWMzB6vBH2qkL1xoI\nOGQd2jdS2r0uQZgF0hd8xTOjGUJ+wRfwmMb1KBG7iUEc3LGwi5s07NpqIFbUi1Y6\nsAiNIaP6Wy26QBkUs8eq0nZzNZi/oDO4ztpQjjENYQKBgQD4sKHCjhY6k6kV/H4I\nrV7MwSfAmAkhEy67y7wtH7zcNZ+po706MkvgvCgv8l8dHAy3QmQ8uOeq/JP/nUk5\n1LuFo8fCHdfBNhmLvChTJ+PkOKiaerKznXdarfdQE+GYsPZkD71Ac/h7Eo3GThT+\n+01wvrRejMoDYINBf+4+xGIWYQKBgQD4Lngwm47sOggXyOOU4sa2H9BdlQCo5tiV\nPa3jAaMByaIPJuy+jgvKZNwclyb5elL+ugN0gBATxSmUHBoZZfkix1aMH2XYPJaM\n6BReuV7LSv7AOo6/wCB5bOnWIR19E+Cb0GlYaTD6o7ttSbO/kcgAbtuWuNYrf6QX\nNX7IxbZ5fQKBgQC6S2cB3XqdatvxUnH/ghBQBioHRl0gX8RUfex7SRkrRShT5grs\nu5zHv2vDbyb9IXQNHDkGm+U/23HqvCKMpeXL2MLdkYl8fVBpswvqLymyXxc+kceo\ncb9lOIjZfeszfO02S+wTikyLtXxrHzbvQ8XhPZrUcVcrbHMm7/TDJE3uQQKBgQDw\nO5sgAhQQ2gOnck/JeNK8zILXczoWRI51uCSvzo/JVTJH1Hfp5HnJSmQ+UJnrd9sK\ns2hQxv3JBVrAAYvJ9gl4/tfp/yKIc+2PK788CdeWlVuPG5++QO2uXBzlp1xyDGGo\nsc6nQ/ujQgZVPbh+wVCGCskIVpcJuB5QUPoOwkNlyQKBgQDgBFAgBg0jGLpbDp1f\njBAc2PdhHFnA08Lqv+bpkv9hdLd3ousu97m3dGZycrJ/lG/ySOlBIKoH009uBGr0\nmj7B/1N2jdFrZapFJ3+rIoF2RTzP68WTNguXh7SIw6tBk2C6Jp6fiOuYbv7jPgIj\nHxa1cIXXdF5c1wnatUrQNnzRrg==\n-----END PRIVATE KEY-----\n",
+  "client_email": "postgres@meraclass-dev.iam.gserviceaccount.com",
+  "client_id": "100612363659131979787",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/postgres%40meraclass-dev.iam.gserviceaccount.com"
+}

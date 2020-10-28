@@ -1,5 +1,5 @@
 {
-  "name": "openvidu-mvc-node",
+  "name": "media-server",
   "version": "2.15.0",
   "description": "",
   "main": "server.js",
@@ -7,28 +7,36 @@
     "start": "node server.js",
     "dev": "NODE_ENV='dev' NODE_TLS_REJECT_UNAUTHORIZED='0' nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "demo": "NODE_ENV='demo' NODE_TLS_REJECT_UNAUTHORIZED='0' pm2 start server.js"
+    "demo": "NODE_ENV='demo' NODE_TLS_REJECT_UNAUTHORIZED='0' pm2 start server.js",
+    "migrate": "node ./migration/seed.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/OpenVidu/openvidu-tutorials.git"
   },
-  "author": "openvidu@gmail.com",
+  "author": "prasad.sawant@meraclass.in",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/OpenVidu/openvidu-tutorials/issues"
   },
   "homepage": "https://github.com/OpenVidu/openvidu-tutorials#readme",
   "dependencies": {
+    "aws-sdk": "^2.778.0",
     "axios": "^0.20.0",
     "body-parser": "1.18.3",
     "cors": "^2.8.5",
-    "express": "4.16.4",
+    "dynamodb": "^1.2.1",
+    "express": "^4.16.4",
     "express-session": "1.16.1",
+    "google-protobuf": "^3.13.0",
+    "grpc": "^1.24.3",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "openvidu-node-client": "2.15.0",
-    "uuid": "^8.3.1"
+    "redis": "^3.0.2",
+    "util": "^0.12.3",
+    "uuid": "^8.3.1",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"

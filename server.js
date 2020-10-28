@@ -11,6 +11,7 @@ const app = express(); // Create our app with express
 
 const keys = require('./config/keys');
 const authRouter = require('./routes/auth');
+const lectureRouter = require('./routes/lectures');
 
 // Server configuration
 app.use(session({
@@ -41,9 +42,12 @@ https.createServer(options, app).listen(5000);
 
 /* REST API */
 app.use('/auth', authRouter);
+app.use('/lectures', lectureRouter);
 
 app.use(function(err, req, res, next) {
     // send the error response
     console.error(err);
     res.status(err.status || 500).json({ message: 'Something went wrong with the server.' });
 });
+
+console.log('Listening on port ' + 5000);
