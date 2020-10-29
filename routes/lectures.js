@@ -70,6 +70,13 @@ router.use('/', function(req, res, next) {
     next();
 });
 
+
+/**
+ * @description GET method to create a new session for a lecture (if none exists) and also, to generate the session token for that lecture.
+ * 
+ * @param {HttpRequest} req - Express HTTP request object
+ * @param {HttpRequest} res - Express HTTP response object
+ */
 router.get('/session/:lectureId/:liveSessionId', (req, res, next) => {
     const authToken = req.headers.authorization.split(' ')[1];
 
@@ -218,7 +225,12 @@ router.get('/session/:lectureId/:liveSessionId', (req, res, next) => {
 });
 
 
-
+/**
+ * @description POST Leave the lecture session and delete the session if no user is online.
+ * 
+ * @param {HttpRequest} req - Express HTTP request object
+ * @param {HttpRequest} res - Express HTTP response object
+ */
 router.post('/leave-session', (req, res) => {
     const authToken = req.headers.authorization.split(' ')[1];
 
@@ -317,6 +329,87 @@ router.post('/leave-session', (req, res) => {
         } catch (err) {
             console.error(err);
             return res.status(500).json({ message: 'Server error' });
+        }
+    });
+});
+
+
+/**
+ * @description GET whether the faculty for the respective lecture has started the lecture or not.
+ * 
+ * @param {HttpRequest} req - Express HTTP request object
+ * @param {HttpRequest} res - Express HTTP response object
+ */
+router.get('/moderator-status/:lectureId', (req, res, next) => {
+    const authToken = req.headers.authorization.split(' ')[1];
+
+    const lectureId = req.params['lectureId'];
+    if (lectureId === null || lectureId === '' || lectureId === undefined) {
+        return res.status(400).json({ message: 'Invalid lecture ID' });
+    }
+
+    jwt.verify(authToken, keys.secret, async function(err, decoded) {
+        if (err) {
+            console.error(err);
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+
+        const user = decoded.user;
+
+        if (user.userType === 'student') {
+            const request = new usersPb.GetLectureRequest();
+
+            const client = new usersService.UserServiceClient(keys.operationsServer, process.env.NODE_ENV === 'dev' ? insecureConn : credentials);
+
+            request.setToken(authToken);
+            request.setLectureId(lectureId);
+
+            client.getLecture(request, async (err, response) => {
+                if (err) {
+                    console.error(err);
+                    if (err.code === grpc.status.INVALID_ARGUMENT) {
+                        return res.status(400).json({ message: err.details });
+                    } else if (err.code === grpc.status.UNAUTHENTICATED) {
+                        return res.status(401).json({ message: err.details });
+                    } else if (err.code === grpc.status.NOT_FOUND) {
+                        return res.status(400).json({ message: err.details });
+                    } else {
+                        return res.status(500).json({ message: err.details });
+                    }
+                } else {
+                    const lec = utils.deserializer(response.getLecture(), 'lecture');
+                    
+                    let factInfo = await cache.get(lectureId, lec.facultyId);
+
+                    if (factInfo !== null) {
+                        logger.info('Cache hit, faculty has started the lecture');
+
+                        return res.status(200).json({ message: 'Faculty has started the lecture', obj: { status: true } });
+                    } else {
+                        logger.info('Cache miss, checking DB');
+
+                        const userLecId = lec.facultyId + '-' + lectureId;
+                        const params = {
+                            TableName: 'lectureSessions',
+                            Key: {
+                                'userLectureId': { 'S': userLecId }
+                            }
+                        };
+        
+                        factInfo = await dynamodb.getItem(params).promise();
+
+                        if (JSON.stringify(factInfo) === '{}') {
+                            logger.info('Faculty has not started the lecture');
+                            return res.status(200).json({ message: 'Faculty has not started the lecture', obj: { status: false }});
+                        } else {
+                            logger.info('Faculty has started the lecture');
+                            return res.status(200).json({ message: 'Faculty has started the lecture', obj: { status: true }});
+                        }
+                    }
+                }
+            });
+        } else {
+            return res.status(403).json({ message: 'Insufficient previledges' });
         }
     });
 });
