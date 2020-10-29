@@ -12,9 +12,10 @@ if (process.env.NODE_ENV === 'ci') {
     client = redis.createClient(keys.redisUrl, { db: 'meraclass', password: 'IRyiJy7OsPa24oTfwK4zNQqhryFQcOAI' });
 } else if (process.env.NODE_ENV === 'prod') {
     
+} else if (process.env.NODE_ENV === 'dev') {
+    client = redis.createClient(keys.redisUrl);
 }
 
-client = redis.createClient(keys.redisUrl);
 
 client.hget = util.promisify(client.hget);
 client.hset = util.promisify(client.hset);
