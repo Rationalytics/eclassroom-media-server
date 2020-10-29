@@ -5,7 +5,7 @@ module.exports = {
     openViduUrl: 'http://localhost:5443/',
     openViduSecret: 'MY_SECRET',
     uuidNameSpace: '0be5053e-8df3-4106-b3c4-d606fe986cf4',
-    redisUrl: 'redis-17140.c1.us-central1-2.gce.cloud.redislabs.com:17140',
+    redisUrl: 'redis://redis-17140.c1.us-central1-2.gce.cloud.redislabs.com:17140',
     postgresUrl: 'meraclass-dev:asia-south1:dev',
     postgresPassword: 'password',
     awsAccessKey: 'AKIAVZ7FYHJ77TU472ZP',
