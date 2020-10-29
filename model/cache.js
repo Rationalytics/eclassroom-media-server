@@ -4,16 +4,17 @@ const redis = require('redis');
 const util = require('util');
 
 const keys = require('../config/keys');
-
-let client = redis.createClient(keys.redisUrl);
+let client = null;
 
 if (process.env.NODE_ENV === 'ci') {
     client = redis.createClient(keys.redisUrl, { db: 'meraclass', password: '8xL0s6SsYQBIxNtztETTcG48tLNKFx1u' });
 } else if (process.env.NODE_ENV === 'demo') {
     client = redis.createClient(keys.redisUrl, { db: 'meraclass', password: 'IRyiJy7OsPa24oTfwK4zNQqhryFQcOAI' });
 } else if (process.env.NODE_ENV === 'prod') {
-
+    
 }
+
+client = redis.createClient(keys.redisUrl);
 
 client.hget = util.promisify(client.hget);
 client.hset = util.promisify(client.hset);
