@@ -1,8 +1,5 @@
 module.exports = {
     secret: 'MiKb_VppNN9$&u,L3]86DXwGTPpm$8',
-    sendinBlueApiKey: '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',
-    fast2SmsApiKey: 'm2Hwu8MDgN0OdFtBoy5G67IQ34YlXkRAVKqearLnsfWiSvxbTCk4d63GXWsNh1o8aemBDuOizIq7jSCF',
-    urlShortnerApi: '6c176f94d0654297608527d30ad13919559f2',
     operationsServer: 'operations-demo.meraclass.in:3100',
     clientUrl: 'https://meraclass.in',
     openViduUrl: 'http://localhost:5443/',
@@ -11,7 +8,7 @@ module.exports = {
     redisUrl: 'redis://127.0.0.1:6379',
     postgresUrl: 'meraclass-dev:asia-south1:dev',
     postgresPassword: 'password',
-    awsAccessKey: '',
-    awsSecretAccessKey: '',
-    awsRegion: '',
+    awsAccessKey: 'AKIAVZ7FYHJ77TU472ZP',
+    awsSecretAccessKey: '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',
+    awsRegion: 'ap-south-1',
 };
