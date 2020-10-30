@@ -137,30 +137,30 @@ router.get('/session/:lectureId/:liveSessionId', (req, res, next) => {
                     logger.info('DB miss, check if session exists in hashmap before creating a new one.');
                     let lecSess = mapSessions[lectureId];
 
-                    if (lecSess === undefined) {
-                        const request = new usersPb.GetLectureRequest();
+                    const request = new usersPb.GetLectureRequest();
 
-                        const client = new usersService.UserServiceClient(keys.operationsServer, process.env.NODE_ENV === 'dev' ? insecureConn : credentials);
+                    const client = new usersService.UserServiceClient(keys.operationsServer, process.env.NODE_ENV === 'dev' ? insecureConn : credentials);
 
-                        request.setToken(authToken);
-                        request.setLectureId(lectureId);
+                    request.setToken(authToken);
+                    request.setLectureId(lectureId);
 
-                        client.getLecture(request, async (err, response) => {
-                            if (err) {
-                                console.error(err);
-                                if (err.code === grpc.status.INVALID_ARGUMENT) {
-                                    return res.status(400).json({ message: err.details });
-                                } else if (err.code === grpc.status.UNAUTHENTICATED) {
-                                    return res.status(401).json({ message: err.details });
-                                } else if (err.code === grpc.status.NOT_FOUND) {
-                                    return res.status(404).json({ message: err.details });
-                                } else {
-                                    return res.status(500).json({ message: err.details });
-                                }
+                    client.getLecture(request, async (err, response) => {
+                        if (err) {
+                            console.error(err);
+                            if (err.code === grpc.status.INVALID_ARGUMENT) {
+                                return res.status(400).json({ message: err.details });
+                            } else if (err.code === grpc.status.UNAUTHENTICATED) {
+                                return res.status(401).json({ message: err.details });
+                            } else if (err.code === grpc.status.NOT_FOUND) {
+                                return res.status(404).json({ message: err.details });
                             } else {
+                                return res.status(500).json({ message: err.details });
+                            }
+                        } else {
+                            const lec = utils.deserializer(response.getLecture(), 'lecture');
+                            
+                            if (lecSess === undefined) {
                                 logger.info('Session does not exists in the hashmap. Creating a new one.');
-                                const lec = utils.deserializer(response.getLecture(), 'lecture');
-
                                 const openviduSess = await OV.createSession({ customSessionId: liveSessionId });
                                 const openviduToken = await openviduSess.generateToken(tokenOptions);
 
@@ -176,26 +176,25 @@ router.get('/session/:lectureId/:liveSessionId', (req, res, next) => {
                                 await dynamoDb.addSessInfo(userLecId, lectureId, openviduSess.sessionId, openviduToken);
 
                                 return res.status(201).json({ message: 'Session created', obj: { token: openviduToken, sessionId: openviduSess.sessionId, }});
+                            } else {
+                                // Session already exists, just join it.
+                                logger.info('Session found in the hashmap. Generating token.');
 
+                                const openviduToken = await lecSess.generateToken(tokenOptions);
+                                
+                                const cachedSess = {
+                                    liveSessionId: liveSessionId,
+                                    sessionId: lecSess.sessionId,
+                                    token: openviduToken
+                                };
+                                
+                                await cache.set(lectureId, userId, JSON.stringify(cachedSess), lec.duration);
+                                await dynamoDb.addSessInfo(userLecId, lectureId, lecSess.sessionId, openviduToken);
+
+                                return res.status(201).json({ message: 'Session created', obj: { token: openviduToken, sessionId: lecSess.sessionId, }});
                             }
-                        });
-                    } else {
-                        // Session already exists, just join it.
-                        logger.info('Session found in the hashmap. Generating token.');
-
-                        const openviduToken = await lecSess.generateToken(tokenOptions);
-                        
-                        const cachedSess = {
-                            liveSessionId: liveSessionId,
-                            sessionId: lecSess.sessionId,
-                            token: openviduToken
-                        };
-                        
-                        await cache.set(lectureId, userId, JSON.stringify(cachedSess), lec.duration);
-                        await dynamoDb.addSessInfo(userLecId, lectureId, lecSess.sessionId, openviduToken);
-
-                        return res.status(201).json({ message: 'Session created', obj: { token: openviduToken, sessionId: lecSess.sessionId, }});
-                    }
+                        }
+                    });
                 } else {
                     logger.info('Returning session ID and openvidu token from DB');
 
