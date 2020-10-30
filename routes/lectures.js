@@ -376,14 +376,7 @@ router.get('/moderator-status/:lectureId', (req, res, next) => {
                         logger.info('Cache miss, checking DB');
 
                         const userLecId = lec.facultyId + '-' + lectureId;
-                        const params = {
-                            TableName: 'lectureSessions',
-                            Key: {
-                                'userLectureId': { 'S': userLecId }
-                            }
-                        };
-        
-                        factInfo = await dynamodb.getItem(params).promise();
+                        factInfo = await dynamoDb.getSessionInfo(userLecId);
 
                         if (JSON.stringify(factInfo) === '{}') {
                             logger.info('Faculty has not started the lecture');
