@@ -251,6 +251,7 @@ router.get('/refresh-token/:lectureId/:liveSessionId', (req, res, next) => {
         } else {
             const userId = decoded.userId;
             const user = decoded.user;
+            const userLecId = userId + '-' + lectureId;
 
             let role = (user.accessLevel == 0 || user.accessLevel == 1 || user.accessLevel == 2) ? OpenViduRole.MODERATOR : OpenViduRole.PUBLISHER;
 
