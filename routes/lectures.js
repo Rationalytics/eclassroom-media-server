@@ -220,6 +220,83 @@ router.get('/session/:lectureId/:liveSessionId', (req, res, next) => {
 
 
 /**
+ * @description GET to generate a new token
+ * 
+ * @param {HttpRequest} req - Express HTTP request object
+ * @param {HttpRequest} res - Express HTTP response object
+ */
+router.get('/refresh-token/:lectureId/:liveSessionId', (req, res, next) => {
+    const authToken = req.headers.authorization.split(' ')[1];
+
+    const lectureId = req.params['lectureId'];
+    if (lectureId === null || lectureId === '' || lectureId === undefined) {
+        return res.status(400).json({ message: 'Invalid lecture ID' });
+    }
+
+    const liveSessionId = req.params['liveSessionId'];
+    if (liveSessionId === null || liveSessionId === '' || liveSessionId === undefined) {
+        return res.status(400).json({ message: 'Invalid session ID' });
+    }
+
+    jwt.verify(authToken, keys.secret, async function(err, decoded) {
+        if (err) {
+            console.error(err);
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+
+        const session = mapSessions[lectureId];
+
+        if (session === undefined) {
+            return res.status(404).json({ message: 'Session not found.' });
+        } else {
+            const userId = decoded.userId;
+            const user = decoded.user;
+
+            let role = (user.accessLevel == 0 || user.accessLevel == 1 || user.accessLevel == 2) ? OpenViduRole.MODERATOR : OpenViduRole.PUBLISHER;
+
+            let usr = {
+                id: userId,
+                name: user.name,
+                email: user.email,
+                mobile: user.mobile,
+                avatar: user.avatar,
+                accessLevel: user.accessLevel,
+                userType: user.userType,
+            };
+
+            // Optional data to be passed to other users when this user connects to the video-call
+            // In this case, a JSON with the value we stored in the req.session object on login
+            const serverData = JSON.stringify({ serverData: usr });
+
+            // Build tokenOptions object with the serverData and the role
+            const tokenOptions = {
+                data: serverData,
+                role: role
+            };
+
+            try {
+                const token = await session.generateToken(tokenOptions);
+
+                const cachedSess = {
+                    liveSessionId: liveSessionId,
+                    sessionId: session.sessionId,
+                    token: token
+                };
+                
+                await cache.set(lectureId, userId, JSON.stringify(cachedSess), lec.duration);
+                await dynamoDb.addSessInfo(userLecId, lectureId, lecSess.sessionId, token);
+
+                return res.status(201).json({ message: 'Session created', obj: { token: token, sessionId: session.sessionId, }});
+            } catch (err) {
+                logger.error(err);
+                return res.status(500).json({ message: 'Server error' });
+            }
+        }
+    });
+});
+
+
+/**
  * @description POST Leave the lecture session and delete the session if no user is online.
  * 
  * @param {HttpRequest} req - Express HTTP request object
