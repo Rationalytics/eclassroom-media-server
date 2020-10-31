@@ -287,7 +287,7 @@ router.get('/refresh-token/:lectureId/:liveSessionId', (req, res, next) => {
                 };
                 
                 await cache.set(lectureId, userId, JSON.stringify(cachedSess), '1');
-                await dynamoDb.addSessInfo(userLecId, lectureId, lecSess.sessionId, token);
+                await dynamoDb.addSessInfo(userLecId, lectureId, session.sessionId, token);
 
                 return res.status(201).json({ message: 'Session created', obj: { token: token, sessionId: session.sessionId, }});
             } catch (err) {
