@@ -109,6 +109,7 @@ router.get('/session/:lectureId/:liveSessionId', (req, res, next) => {
             avatar: user.avatar,
             accessLevel: user.accessLevel,
             userType: user.userType,
+            studentIdentification: user.studentIdentification,
         };
 
         // Optional data to be passed to other users when this user connects to the video-call
@@ -263,6 +264,7 @@ router.get('/refresh-token/:lectureId/:liveSessionId', (req, res, next) => {
                 avatar: user.avatar,
                 accessLevel: user.accessLevel,
                 userType: user.userType,
+                studentIdentification: user.studentIdentification,
             };
 
             // Optional data to be passed to other users when this user connects to the video-call
