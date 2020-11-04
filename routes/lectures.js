@@ -307,7 +307,7 @@ router.get('/refresh-token/:lectureId/:liveSessionId', (req, res, next) => {
  */
 router.post('/leave-session', (req, res) => {
     const authToken = req.headers.authorization.split(' ')[1];
-
+    
     const body = req.body;
 
     const sessionId = body.sessionId;
