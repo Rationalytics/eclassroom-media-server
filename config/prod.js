@@ -3,7 +3,7 @@ module.exports = {
     operationsServer: 'operations.meraclass.in:3100',
     clientUrl: 'https://meraclass.in',
     openViduUrl: 'http://localhost:5443',
-    openViduSecret: 'MY_SECRET',
+    openViduSecret: 'm3raclas$',
     uuidNameSpace: '0be5053e-8df3-4106-b3c4-d606fe986cf4',
     redisUrl: 'redis://redis-14610.c212.ap-south-1-1.ec2.cloud.redislabs.com:14610',
     postgresUrl: 'meraclass-dev:asia-south1:dev',
