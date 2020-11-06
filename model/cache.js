@@ -7,21 +7,13 @@ const keys = require('../config/keys');
 let client = null;
 
 if (process.env.NODE_ENV === 'ci') {
-    client = redis.createClient(keys.redisUrl, { db: 'meraclass', password: '8xL0s6SsYQBIxNtztETTcG48tLNKFx1u' });
+    client = redis.createClient(keys.redisUrl, { db: 'meraclass', password: keys.redisPassword });
 } else if (process.env.NODE_ENV === 'demo') {
-    client = redis.createClient(keys.redisUrl, { db: 'meraclass', password: 'IRyiJy7OsPa24oTfwK4zNQqhryFQcOAI' });
+    client = redis.createClient(keys.redisUrl, { db: 'meraclass', password: keys.redisPassword });
 } else if (process.env.NODE_ENV === 'prod') {
-    client = redis.createClient(keys.redisUrl, { db: 'meraclass', password: 'cPqoWwravvXlr3CohIkCH3NNomfxDT7X' });
+    client = redis.createClient(keys.redisUrl, { password: keys.redisPassword });
 } else if (process.env.NODE_ENV === 'dev') {
-    // client = redis.createClient(keys.redisUrl);
-    console.log(keys.redisUrl);
-    client = redis.createClient(10737, 'redis://redis-10737.c212.ap-south-1-1.ec2.cloud.redislabs.com', { db: 'meraclass', password: 'byNQfWu7eo34fIcU3UQdIUw7fneVfuXf' });
-    // client = redis.createClient({
-    //     host: '35.154.114.49',
-    //     port: 11657,
-    //     password: 'cPqoWwravvXlr3CohIkCH3NNomfxDT7X',
-    //     db: 'meraclass',
-    // });
+    client = redis.createClient(keys.redisUrl);
 }
 
 
