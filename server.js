@@ -13,6 +13,8 @@ const keys = require('./config/keys');
 const authRouter = require('./routes/auth');
 const lectureRouter = require('./routes/lectures');
 
+const wsServer = require('./services/wsServer');
+
 // Server configuration
 app.use(session({
     saveUninitialized: true,
@@ -37,7 +39,8 @@ const options = {
     cert: process.env.NODE_ENV === 'dev' ? fs.readFileSync('./certs/openviducert.pem') : fs.readFileSync('./certs/publicKey.crt')
 };
 
-https.createServer(options, app).listen(5000);
+const server = https.createServer(options, app).listen(5000);
+wsServer.startWebSocketServer(server);
 
 
 /* REST API */

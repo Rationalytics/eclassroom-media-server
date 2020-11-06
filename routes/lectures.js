@@ -38,6 +38,8 @@ const usersService = require('../protos/users_grpc_pb');
 
 const dynamoDb = require('../model/DynamoDB');
 
+const localCache = require('../services/localCache');
+
 const insecureConn = grpc.credentials.createInsecure();
 
 const certPath = path.join('certs', process.env.NODE_ENV);
@@ -135,7 +137,8 @@ router.get('/session/:lectureId/:liveSessionId', (req, res, next) => {
                 if (sessInfo === undefined || sessInfo === null || JSON.stringify(sessInfo) === '{}') {
                     // DB miss, create session
                     logger.info('DB miss, check if session exists in hashmap before creating a new one.');
-                    let lecSess = mapSessions[lectureId];
+                    // let lecSess = mapSessions[lectureId];
+                    let lecSess = localCache.get(lectureId);
 
                     const request = new usersPb.GetLectureRequest();
 
@@ -164,7 +167,8 @@ router.get('/session/:lectureId/:liveSessionId', (req, res, next) => {
                                 const openviduSess = await OV.createSession({ customSessionId: liveSessionId });
                                 const openviduToken = await openviduSess.generateToken(tokenOptions);
 
-                                mapSessions[lectureId] = openviduSess;
+                                // mapSessions[lectureId] = openviduSess;
+                                localCache.set(lectureId, openviduSess);
                                 
                                 const cachedSess = {
                                     liveSessionId: liveSessionId,
@@ -265,7 +269,8 @@ router.get('/session/no-cache/:lectureId/:liveSessionId', (req, res, next) => {
         };
 
         try {
-            let sess = mapSessions[lectureId];
+            // let sess = mapSessions[lectureId];
+            let sess = localCache.get(lectureId);
             if (sess) {
                 const openviduToken = await sess.generateToken(tokenOptions);
 
@@ -309,7 +314,8 @@ router.get('/refresh-token/:lectureId/:liveSessionId', (req, res, next) => {
             return res.status(401).json({ message: 'Unauthorized' });
         }
 
-        const session = mapSessions[lectureId];
+        // const session = mapSessions[lectureId];
+        const session = localCache.get(lectureId);
 
         if (session === undefined) {
             return res.status(404).json({ message: 'Session not found.' });
@@ -435,12 +441,14 @@ router.post('/leave-session', (req, res) => {
                                     { headers: { Authorization: utils.getBasicAuth() }}
                                 );
 
-                                delete mapSessions[lectureId];
+                                // delete mapSessions[lectureId];
+                                localCache.delete(lectureId);
                             }
                         })
                         .catch(async e => {
                             logger.info('Session already deleted');
-                            delete mapSessions[lectureId];
+                            // delete mapSessions[lectureId];
+                            localCache.delete(lectureId);
                         })
                         .then(() => {
                             return res.status(200).json({ message: 'User kicked from session' });
