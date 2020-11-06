@@ -76,150 +76,150 @@ router.use('/', function(req, res, next) {
  * @param {HttpRequest} req - Express HTTP request object
  * @param {HttpRequest} res - Express HTTP response object
  */
-// router.get('/session/:lectureId/:liveSessionId', (req, res, next) => {
-//     const authToken = req.headers.authorization.split(' ')[1];
-
-//     const lectureId = req.params['lectureId'];
-//     if (lectureId === null || lectureId === '' || lectureId === undefined) {
-//         return res.status(400).json({ message: 'Invalid lecture ID' });
-//     }
-
-//     const liveSessionId = req.params['liveSessionId'];
-//     if (liveSessionId === null || liveSessionId === '' || liveSessionId === undefined) {
-//         return res.status(400).json({ message: 'Invalid session ID' });
-//     }
-
-//     jwt.verify(authToken, keys.secret, async function(err, decoded) {
-//         if (err) {
-//             console.error(err);
-//             return res.status(401).json({ message: 'Unauthorized' });
-//         }
-
-//         const userId = decoded.userId;
-//         const user = decoded.user;
-
-//         let role = (user.accessLevel == 0 || user.accessLevel == 1 || user.accessLevel == 2) ? OpenViduRole.MODERATOR : OpenViduRole.PUBLISHER;
-
-//         let usr = {
-//             id: userId,
-//             name: user.name,
-//             email: user.email,
-//             mobile: user.mobile,
-//             avatar: user.avatar,
-//             accessLevel: user.accessLevel,
-//             userType: user.userType,
-//             studentIdentification: user.studentIdentification,
-//         };
-
-//         // Optional data to be passed to other users when this user connects to the video-call
-//         // In this case, a JSON with the value we stored in the req.session object on login
-//         const serverData = JSON.stringify({ serverData: usr });
-
-//         // Build tokenOptions object with the serverData and the role
-//         const tokenOptions = {
-//             data: serverData,
-//             role: role
-//         };
-
-//         try {
-//             logger.info('Fetching session ID and token from cache.');
-//             let lecture = await cache.get(lectureId, userId);
-//             const userLecId = userId + '-' + lectureId;
-
-//             if (lecture === null) {
-//                 // Cache miss, check into DB
-//                 logger.info('Cache miss, checking into DB');
-
-//                 const sessInfo = await dynamoDb.getSessionInfo(userLecId);
-                
-//                 if (sessInfo === undefined || sessInfo === null || JSON.stringify(sessInfo) === '{}') {
-//                     // DB miss, create session
-//                     logger.info('DB miss, check if session exists in hashmap before creating a new one.');
-//                     let lecSess = mapSessions[lectureId];
-
-//                     const request = new usersPb.GetLectureRequest();
-
-//                     const client = new usersService.UserServiceClient(keys.operationsServer, process.env.NODE_ENV === 'dev' ? insecureConn : credentials);
-
-//                     request.setToken(authToken);
-//                     request.setLectureId(lectureId);
-
-//                     client.getLecture(request, async (err, response) => {
-//                         if (err) {
-//                             console.error(err);
-//                             if (err.code === grpc.status.INVALID_ARGUMENT) {
-//                                 return res.status(400).json({ message: err.details });
-//                             } else if (err.code === grpc.status.UNAUTHENTICATED) {
-//                                 return res.status(401).json({ message: err.details });
-//                             } else if (err.code === grpc.status.NOT_FOUND) {
-//                                 return res.status(404).json({ message: err.details });
-//                             } else {
-//                                 return res.status(500).json({ message: err.details });
-//                             }
-//                         } else {
-//                             const lec = utils.deserializer(response.getLecture(), 'lecture');
-                            
-//                             if (lecSess === undefined) {
-//                                 logger.info('Session does not exists in the hashmap. Creating a new one.');
-//                                 const openviduSess = await OV.createSession({ customSessionId: liveSessionId });
-//                                 const openviduToken = await openviduSess.generateToken(tokenOptions);
-
-//                                 mapSessions[lectureId] = openviduSess;
-                                
-//                                 const cachedSess = {
-//                                     liveSessionId: liveSessionId,
-//                                     sessionId: openviduSess.sessionId,
-//                                     token: openviduToken
-//                                 };
-                                
-//                                 await cache.set(lectureId, userId, JSON.stringify(cachedSess), lec.duration);
-//                                 await dynamoDb.addSessInfo(userLecId, lectureId, openviduSess.sessionId, openviduToken);
-
-//                                 return res.status(201).json({ message: 'Session created', obj: { token: openviduToken, sessionId: openviduSess.sessionId, }});
-//                             } else {
-//                                 // Session already exists, just join it.
-//                                 logger.info('Session found in the hashmap. Generating token.');
-
-//                                 const openviduToken = await lecSess.generateToken(tokenOptions);
-                                
-//                                 const cachedSess = {
-//                                     liveSessionId: liveSessionId,
-//                                     sessionId: lecSess.sessionId,
-//                                     token: openviduToken
-//                                 };
-                                
-//                                 await cache.set(lectureId, userId, JSON.stringify(cachedSess), lec.duration);
-//                                 await dynamoDb.addSessInfo(userLecId, lectureId, lecSess.sessionId, openviduToken);
-
-//                                 return res.status(201).json({ message: 'Session created', obj: { token: openviduToken, sessionId: lecSess.sessionId, }});
-//                             }
-//                         }
-//                     });
-//                 } else {
-//                     logger.info('Returning session ID and openvidu token from DB');
-
-//                     const cachedSess = {
-//                         liveSessionId: liveSessionId,
-//                         sessionId: sessInfo.Item.sessionId.S,
-//                         token: sessInfo.Item.token.S
-//                     };
-
-//                     await cache.set(lectureId, userId, JSON.stringify(cachedSess));
-//                     return res.status(201).json({ message: 'Session created', obj: { token: sessInfo.Item.token.S, sessionId: sessInfo.Item.sessionId.S, }});
-//                 }
-//             } else {
-//                 logger.info('Returning cached session ID and openvidu token');
-//                 return res.status(201).json({ message: 'Session created', obj: { token: lecture.token, sessionId: lecture.sessionId, }});
-//             }
-//         } catch (error) {
-//             console.error(error);
-//             return res.status(500).json({ message: 'Server error' });
-//         }
-//     });
-// });
-
-
 router.get('/session/:lectureId/:liveSessionId', (req, res, next) => {
+    const authToken = req.headers.authorization.split(' ')[1];
+
+    const lectureId = req.params['lectureId'];
+    if (lectureId === null || lectureId === '' || lectureId === undefined) {
+        return res.status(400).json({ message: 'Invalid lecture ID' });
+    }
+
+    const liveSessionId = req.params['liveSessionId'];
+    if (liveSessionId === null || liveSessionId === '' || liveSessionId === undefined) {
+        return res.status(400).json({ message: 'Invalid session ID' });
+    }
+
+    jwt.verify(authToken, keys.secret, async function(err, decoded) {
+        if (err) {
+            console.error(err);
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+
+        const userId = decoded.userId;
+        const user = decoded.user;
+
+        let role = (user.accessLevel == 0 || user.accessLevel == 1 || user.accessLevel == 2) ? OpenViduRole.MODERATOR : OpenViduRole.PUBLISHER;
+
+        let usr = {
+            id: userId,
+            name: user.name,
+            email: user.email,
+            mobile: user.mobile,
+            avatar: user.avatar,
+            accessLevel: user.accessLevel,
+            userType: user.userType,
+            studentIdentification: user.studentIdentification,
+        };
+
+        // Optional data to be passed to other users when this user connects to the video-call
+        // In this case, a JSON with the value we stored in the req.session object on login
+        const serverData = JSON.stringify({ serverData: usr });
+
+        // Build tokenOptions object with the serverData and the role
+        const tokenOptions = {
+            data: serverData,
+            role: role
+        };
+
+        try {
+            logger.info('Fetching session ID and token from cache.');
+            let lecture = await cache.get(lectureId, userId);
+            const userLecId = userId + '-' + lectureId;
+
+            if (lecture === null) {
+                // Cache miss, check into DB
+                logger.info('Cache miss, checking into DB');
+
+                const sessInfo = await dynamoDb.getSessionInfo(userLecId);
+                
+                if (sessInfo === undefined || sessInfo === null || JSON.stringify(sessInfo) === '{}') {
+                    // DB miss, create session
+                    logger.info('DB miss, check if session exists in hashmap before creating a new one.');
+                    let lecSess = mapSessions[lectureId];
+
+                    const request = new usersPb.GetLectureRequest();
+
+                    const client = new usersService.UserServiceClient(keys.operationsServer, process.env.NODE_ENV === 'dev' ? insecureConn : credentials);
+
+                    request.setToken(authToken);
+                    request.setLectureId(lectureId);
+
+                    client.getLecture(request, async (err, response) => {
+                        if (err) {
+                            console.error(err);
+                            if (err.code === grpc.status.INVALID_ARGUMENT) {
+                                return res.status(400).json({ message: err.details });
+                            } else if (err.code === grpc.status.UNAUTHENTICATED) {
+                                return res.status(401).json({ message: err.details });
+                            } else if (err.code === grpc.status.NOT_FOUND) {
+                                return res.status(404).json({ message: err.details });
+                            } else {
+                                return res.status(500).json({ message: err.details });
+                            }
+                        } else {
+                            const lec = utils.deserializer(response.getLecture(), 'lecture');
+                            
+                            if (lecSess === undefined) {
+                                logger.info('Session does not exists in the hashmap. Creating a new one.');
+                                const openviduSess = await OV.createSession({ customSessionId: liveSessionId });
+                                const openviduToken = await openviduSess.generateToken(tokenOptions);
+
+                                mapSessions[lectureId] = openviduSess;
+                                
+                                const cachedSess = {
+                                    liveSessionId: liveSessionId,
+                                    sessionId: openviduSess.sessionId,
+                                    token: openviduToken
+                                };
+                                
+                                await cache.set(lectureId, userId, JSON.stringify(cachedSess), lec.duration);
+                                await dynamoDb.addSessInfo(userLecId, lectureId, openviduSess.sessionId, openviduToken);
+
+                                return res.status(201).json({ message: 'Session created', obj: { token: openviduToken, sessionId: openviduSess.sessionId, }});
+                            } else {
+                                // Session already exists, just join it.
+                                logger.info('Session found in the hashmap. Generating token.');
+
+                                const openviduToken = await lecSess.generateToken(tokenOptions);
+                                
+                                const cachedSess = {
+                                    liveSessionId: liveSessionId,
+                                    sessionId: lecSess.sessionId,
+                                    token: openviduToken
+                                };
+                                
+                                await cache.set(lectureId, userId, JSON.stringify(cachedSess), lec.duration);
+                                await dynamoDb.addSessInfo(userLecId, lectureId, lecSess.sessionId, openviduToken);
+
+                                return res.status(201).json({ message: 'Session created', obj: { token: openviduToken, sessionId: lecSess.sessionId, }});
+                            }
+                        }
+                    });
+                } else {
+                    logger.info('Returning session ID and openvidu token from DB');
+
+                    const cachedSess = {
+                        liveSessionId: liveSessionId,
+                        sessionId: sessInfo.Item.sessionId.S,
+                        token: sessInfo.Item.token.S
+                    };
+
+                    await cache.set(lectureId, userId, JSON.stringify(cachedSess));
+                    return res.status(201).json({ message: 'Session created', obj: { token: sessInfo.Item.token.S, sessionId: sessInfo.Item.sessionId.S, }});
+                }
+            } else {
+                logger.info('Returning cached session ID and openvidu token');
+                return res.status(201).json({ message: 'Session created', obj: { token: lecture.token, sessionId: lecture.sessionId, }});
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: 'Server error' });
+        }
+    });
+});
+
+
+router.get('/session/no-cache/:lectureId/:liveSessionId', (req, res, next) => {
     const authToken = req.headers.authorization.split(' ')[1];
 
     const lectureId = req.params['lectureId'];
