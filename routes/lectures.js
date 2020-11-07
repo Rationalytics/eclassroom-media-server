@@ -8,25 +8,9 @@ const OpenVidu = require('openvidu-node-client').OpenVidu;
 const OpenViduRole = require('openvidu-node-client').OpenViduRole;
 const uuidv5 = require('uuid').v5;
 const express = require('express');
-const { createLogger, format, transports } = require('winston');
-const { combine, timestamp, label, printf } = format;
 const router = express.Router();
 
-const myFormat = printf(({ level, message, label, timestamp }) => {
-    return `${timestamp} [${label}] ${level.toUpperCase()}: ${message}`;
-});
-
-const logger = createLogger({
-    level: 'info',
-    format: combine(
-        label({ label: 'LECTURE_SESSION' }),
-        timestamp(),
-        myFormat
-    ),
-    transports: [new transports.Console()]
-});
-
-
+const logger = require('../helpers/logger');
 const keys = require('../config/keys');
 const OV = new OpenVidu(keys.openViduUrl, keys.openViduSecret);
 
@@ -216,7 +200,7 @@ router.get('/session/:lectureId/:liveSessionId', (req, res, next) => {
                 return res.status(201).json({ message: 'Session created', obj: { token: lecture.token, sessionId: lecture.sessionId, }});
             }
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             return res.status(500).json({ message: 'Server error' });
         }
     });
@@ -282,7 +266,7 @@ router.get('/session/no-cache/:lectureId/:liveSessionId', (req, res, next) => {
                 return res.status(201).json({ message: 'Session created', obj: { token: openviduToken, sessionId: openviduSess.sessionId, }});
             }
         } catch (err) {
-            console.error(err);
+            logger.error(err);
             res.status(500).json({ message: 'Server Error' });
         }
     });
@@ -310,7 +294,7 @@ router.get('/refresh-token/:lectureId/:liveSessionId', (req, res, next) => {
 
     jwt.verify(authToken, keys.secret, async function(err, decoded) {
         if (err) {
-            console.error(err);
+            logger.error(err);
             return res.status(401).json({ message: 'Unauthorized' });
         }
 
@@ -466,7 +450,7 @@ router.post('/leave-session', (req, res) => {
                 return res.status(404).json({ message: 'Cannot find session.' });
             }
         } catch (err) {
-            console.error(err);
+            logger.error(err);
             return res.status(500).json({ message: 'Server error' });
         }
     });

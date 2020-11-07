@@ -5,6 +5,7 @@ const utils = require('../helpers/utils');
 const cache = require('../model/cache');
 const dynamoDb = require('../model/DynamoDB');
 const localCache = require('./localCache');
+const logger = require('../helpers/logger');
 
 module.exports = {
     async getSessionInfo(sessionId) {
@@ -32,7 +33,7 @@ module.exports = {
                     cache.delete(lectureId, userId);
                     await dynamoDb.deleteSessInfo(userId, lectureId);
 
-                    console.info('Connection deleted successfully');
+                    logger.info('Connection deleted successfully');
 
                     // Now check if all the participants of the room have left or not.
                     // If the room is empty then delete the room
@@ -53,26 +54,25 @@ module.exports = {
                             }
                         })
                         .catch(async e => {
-                            console.info('Session already deleted');
-                            // delete mapSessions[lectureId];
+                            logger.info('Session already deleted');
                             localCache.delete(lectureId);
                         })
                         .then(() => {
-                            console.log('User kicked from session');
+                            logger.info('User removed from session');
                         });
                     
                 } else if (deleteConn.status == 400) {
                     // Session not found.
-                    console.log('Session does not exists.');
+                    logger.error('Session does not exists.');
                 } else if (deleteConn.status === 404) {
                     // Connection not found.
-                    console.log('Connection does not exists.');
+                    logger.error('Connection does not exists.');
                 }
             } else {
-                console.log(sess);
+                logger.info(sess);
             }
         } catch (err) {
-            console.error(err);
+            logger.error(err);
         }
     }
 }
