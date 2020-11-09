@@ -93,6 +93,28 @@ function deserialize_users_GetLectureResponse(buffer_arg) {
   return protos_users_pb.GetLectureResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_users_GetLecturesByTimelineRequest(arg) {
+  if (!(arg instanceof protos_users_pb.GetLecturesByTimelineRequest)) {
+    throw new Error('Expected argument of type users.GetLecturesByTimelineRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_users_GetLecturesByTimelineRequest(buffer_arg) {
+  return protos_users_pb.GetLecturesByTimelineRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_users_GetLecturesByTimelineResponse(arg) {
+  if (!(arg instanceof protos_users_pb.GetLecturesByTimelineResponse)) {
+    throw new Error('Expected argument of type users.GetLecturesByTimelineResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_users_GetLecturesByTimelineResponse(buffer_arg) {
+  return protos_users_pb.GetLecturesByTimelineResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_users_GetLecturesRequest(arg) {
   if (!(arg instanceof protos_users_pb.GetLecturesRequest)) {
     throw new Error('Expected argument of type users.GetLecturesRequest');
@@ -135,6 +157,28 @@ function serialize_users_GetPastLecturesResponse(arg) {
 
 function deserialize_users_GetPastLecturesResponse(buffer_arg) {
   return protos_users_pb.GetPastLecturesResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_users_GetSignedUploadUrlRequest(arg) {
+  if (!(arg instanceof protos_users_pb.GetSignedUploadUrlRequest)) {
+    throw new Error('Expected argument of type users.GetSignedUploadUrlRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_users_GetSignedUploadUrlRequest(buffer_arg) {
+  return protos_users_pb.GetSignedUploadUrlRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_users_GetSignedUploadUrlResponse(arg) {
+  if (!(arg instanceof protos_users_pb.GetSignedUploadUrlResponse)) {
+    throw new Error('Expected argument of type users.GetSignedUploadUrlResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_users_GetSignedUploadUrlResponse(buffer_arg) {
+  return protos_users_pb.GetSignedUploadUrlResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_users_GetStudentSubjectsRequest(arg) {
@@ -256,6 +300,28 @@ function serialize_users_ScheduleLectureResponse(arg) {
 
 function deserialize_users_ScheduleLectureResponse(buffer_arg) {
   return protos_users_pb.ScheduleLectureResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_users_SetLectureStatusRequest(arg) {
+  if (!(arg instanceof protos_users_pb.SetLectureStatusRequest)) {
+    throw new Error('Expected argument of type users.SetLectureStatusRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_users_SetLectureStatusRequest(buffer_arg) {
+  return protos_users_pb.SetLectureStatusRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_users_SetLectureStatusResponse(arg) {
+  if (!(arg instanceof protos_users_pb.SetLectureStatusResponse)) {
+    throw new Error('Expected argument of type users.SetLectureStatusResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_users_SetLectureStatusResponse(buffer_arg) {
+  return protos_users_pb.SetLectureStatusResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_users_StudentSignUpRequest(arg) {
@@ -414,6 +480,28 @@ var UserServiceService = exports.UserServiceService = {
     responseSerialize: serialize_users_GetPastLecturesResponse,
     responseDeserialize: deserialize_users_GetPastLecturesResponse,
   },
+  getLecturesByTimeline: {
+    path: '/users.UserService/GetLecturesByTimeline',
+    requestStream: false,
+    responseStream: false,
+    requestType: protos_users_pb.GetLecturesByTimelineRequest,
+    responseType: protos_users_pb.GetLecturesByTimelineResponse,
+    requestSerialize: serialize_users_GetLecturesByTimelineRequest,
+    requestDeserialize: deserialize_users_GetLecturesByTimelineRequest,
+    responseSerialize: serialize_users_GetLecturesByTimelineResponse,
+    responseDeserialize: deserialize_users_GetLecturesByTimelineResponse,
+  },
+  setLectureStatus: {
+    path: '/users.UserService/SetLectureStatus',
+    requestStream: false,
+    responseStream: false,
+    requestType: protos_users_pb.SetLectureStatusRequest,
+    responseType: protos_users_pb.SetLectureStatusResponse,
+    requestSerialize: serialize_users_SetLectureStatusRequest,
+    requestDeserialize: deserialize_users_SetLectureStatusRequest,
+    responseSerialize: serialize_users_SetLectureStatusResponse,
+    responseDeserialize: deserialize_users_SetLectureStatusResponse,
+  },
   getStudentSubjects: {
     path: '/users.UserService/GetStudentSubjects',
     requestStream: false,
@@ -424,6 +512,17 @@ var UserServiceService = exports.UserServiceService = {
     requestDeserialize: deserialize_users_GetStudentSubjectsRequest,
     responseSerialize: serialize_users_GetStudentSubjectsResponse,
     responseDeserialize: deserialize_users_GetStudentSubjectsResponse,
+  },
+  getSignedUploadUrl: {
+    path: '/users.UserService/GetSignedUploadUrl',
+    requestStream: false,
+    responseStream: false,
+    requestType: protos_users_pb.GetSignedUploadUrlRequest,
+    responseType: protos_users_pb.GetSignedUploadUrlResponse,
+    requestSerialize: serialize_users_GetSignedUploadUrlRequest,
+    requestDeserialize: deserialize_users_GetSignedUploadUrlRequest,
+    responseSerialize: serialize_users_GetSignedUploadUrlResponse,
+    responseDeserialize: deserialize_users_GetSignedUploadUrlResponse,
   },
 };
 

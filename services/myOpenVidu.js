@@ -6,6 +6,7 @@ const cache = require('../model/cache');
 const dynamoDb = require('../model/DynamoDB');
 const localCache = require('./localCache');
 const logger = require('../helpers/logger');
+const lectureService = require('./lecture');
 
 module.exports = {
     async getSessionInfo(sessionId) {
@@ -17,7 +18,7 @@ module.exports = {
         }
     },
 
-    async leaveSession(sessionId, connectionId, lectureId, userId) {
+    async leaveSession(authToken, sessionId, connectionId, lectureId, userId) {
         try {
             const sess = await axios.get(keys.openViduUrl + 'api/sessions/' + sessionId, { headers: { Authorization: utils.getBasicAuth() }});
 
@@ -73,6 +74,8 @@ module.exports = {
             }
         } catch (err) {
             logger.error(err);
+        } finally {
+            await lectureService.toggleLectureStatus(authToken, lectureId, false);
         }
     }
 }

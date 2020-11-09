@@ -2402,7 +2402,7 @@ proto.Subject.prototype.setUpdatedAt = function(value) {
  * @private {!Array<number>}
  * @const
  */
-proto.Lecture.repeatedFields_ = [4];
+proto.Lecture.repeatedFields_ = [5];
 
 
 
@@ -2436,19 +2436,21 @@ proto.Lecture.prototype.toObject = function(opt_includeInstance) {
 proto.Lecture.toObject = function(includeInstance, msg) {
   var f, obj = {
     id: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    description: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    classId: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    batchesList: (f = jspb.Message.getRepeatedField(msg, 4)) == null ? undefined : f,
-    scheduledAt: jspb.Message.getFieldWithDefault(msg, 5, 0),
-    instituteId: jspb.Message.getFieldWithDefault(msg, 6, ""),
-    subjectId: jspb.Message.getFieldWithDefault(msg, 7, ""),
-    facultyId: jspb.Message.getFieldWithDefault(msg, 8, ""),
-    duration: jspb.Message.getFieldWithDefault(msg, 9, 0),
-    liveSessionId: jspb.Message.getFieldWithDefault(msg, 10, ""),
-    createdAt: jspb.Message.getFieldWithDefault(msg, 11, 0),
-    createdBy: jspb.Message.getFieldWithDefault(msg, 12, ""),
-    updatedAt: jspb.Message.getFieldWithDefault(msg, 13, 0),
-    updatedBy: jspb.Message.getFieldWithDefault(msg, 14, "")
+    title: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    description: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    classId: jspb.Message.getFieldWithDefault(msg, 4, ""),
+    batchesList: (f = jspb.Message.getRepeatedField(msg, 5)) == null ? undefined : f,
+    scheduledAt: jspb.Message.getFieldWithDefault(msg, 6, 0),
+    instituteId: jspb.Message.getFieldWithDefault(msg, 7, ""),
+    subjectId: jspb.Message.getFieldWithDefault(msg, 8, ""),
+    facultyId: jspb.Message.getFieldWithDefault(msg, 9, ""),
+    duration: jspb.Message.getFieldWithDefault(msg, 10, 0),
+    liveSessionId: jspb.Message.getFieldWithDefault(msg, 11, ""),
+    isLive: jspb.Message.getBooleanFieldWithDefault(msg, 12, false),
+    createdAt: jspb.Message.getFieldWithDefault(msg, 13, 0),
+    createdBy: jspb.Message.getFieldWithDefault(msg, 14, ""),
+    updatedAt: jspb.Message.getFieldWithDefault(msg, 15, 0),
+    updatedBy: jspb.Message.getFieldWithDefault(msg, 16, "")
   };
 
   if (includeInstance) {
@@ -2491,53 +2493,61 @@ proto.Lecture.deserializeBinaryFromReader = function(msg, reader) {
       break;
     case 2:
       var value = /** @type {string} */ (reader.readString());
-      msg.setDescription(value);
+      msg.setTitle(value);
       break;
     case 3:
       var value = /** @type {string} */ (reader.readString());
-      msg.setClassId(value);
+      msg.setDescription(value);
       break;
     case 4:
       var value = /** @type {string} */ (reader.readString());
-      msg.addBatches(value);
+      msg.setClassId(value);
       break;
     case 5:
+      var value = /** @type {string} */ (reader.readString());
+      msg.addBatches(value);
+      break;
+    case 6:
       var value = /** @type {number} */ (reader.readUint64());
       msg.setScheduledAt(value);
       break;
-    case 6:
+    case 7:
       var value = /** @type {string} */ (reader.readString());
       msg.setInstituteId(value);
       break;
-    case 7:
+    case 8:
       var value = /** @type {string} */ (reader.readString());
       msg.setSubjectId(value);
       break;
-    case 8:
+    case 9:
       var value = /** @type {string} */ (reader.readString());
       msg.setFacultyId(value);
       break;
-    case 9:
+    case 10:
       var value = /** @type {number} */ (reader.readUint32());
       msg.setDuration(value);
       break;
-    case 10:
+    case 11:
       var value = /** @type {string} */ (reader.readString());
       msg.setLiveSessionId(value);
       break;
-    case 11:
-      var value = /** @type {number} */ (reader.readUint64());
-      msg.setCreatedAt(value);
-      break;
     case 12:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setCreatedBy(value);
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setIsLive(value);
       break;
     case 13:
       var value = /** @type {number} */ (reader.readUint64());
-      msg.setUpdatedAt(value);
+      msg.setCreatedAt(value);
       break;
     case 14:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setCreatedBy(value);
+      break;
+    case 15:
+      var value = /** @type {number} */ (reader.readUint64());
+      msg.setUpdatedAt(value);
+      break;
+    case 16:
       var value = /** @type {string} */ (reader.readString());
       msg.setUpdatedBy(value);
       break;
@@ -2577,94 +2587,108 @@ proto.Lecture.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getDescription();
+  f = message.getTitle();
   if (f.length > 0) {
     writer.writeString(
       2,
       f
     );
   }
-  f = message.getClassId();
+  f = message.getDescription();
   if (f.length > 0) {
     writer.writeString(
       3,
       f
     );
   }
+  f = message.getClassId();
+  if (f.length > 0) {
+    writer.writeString(
+      4,
+      f
+    );
+  }
   f = message.getBatchesList();
   if (f.length > 0) {
     writer.writeRepeatedString(
-      4,
+      5,
       f
     );
   }
   f = message.getScheduledAt();
   if (f !== 0) {
     writer.writeUint64(
-      5,
+      6,
       f
     );
   }
   f = message.getInstituteId();
   if (f.length > 0) {
     writer.writeString(
-      6,
+      7,
       f
     );
   }
   f = message.getSubjectId();
   if (f.length > 0) {
     writer.writeString(
-      7,
+      8,
       f
     );
   }
   f = message.getFacultyId();
   if (f.length > 0) {
     writer.writeString(
-      8,
+      9,
       f
     );
   }
   f = message.getDuration();
   if (f !== 0) {
     writer.writeUint32(
-      9,
+      10,
       f
     );
   }
   f = message.getLiveSessionId();
   if (f.length > 0) {
     writer.writeString(
-      10,
+      11,
+      f
+    );
+  }
+  f = message.getIsLive();
+  if (f) {
+    writer.writeBool(
+      12,
       f
     );
   }
   f = message.getCreatedAt();
   if (f !== 0) {
     writer.writeUint64(
-      11,
+      13,
       f
     );
   }
   f = message.getCreatedBy();
   if (f.length > 0) {
     writer.writeString(
-      12,
+      14,
       f
     );
   }
   f = message.getUpdatedAt();
   if (f !== 0) {
     writer.writeUint64(
-      13,
+      15,
       f
     );
   }
   f = message.getUpdatedBy();
   if (f.length > 0) {
     writer.writeString(
-      14,
+      16,
       f
     );
   }
@@ -2690,10 +2714,10 @@ proto.Lecture.prototype.setId = function(value) {
 
 
 /**
- * optional string description = 2;
+ * optional string title = 2;
  * @return {string}
  */
-proto.Lecture.prototype.getDescription = function() {
+proto.Lecture.prototype.getTitle = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
@@ -2702,16 +2726,16 @@ proto.Lecture.prototype.getDescription = function() {
  * @param {string} value
  * @return {!proto.Lecture} returns this
  */
-proto.Lecture.prototype.setDescription = function(value) {
+proto.Lecture.prototype.setTitle = function(value) {
   return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
 /**
- * optional string class_id = 3;
+ * optional string description = 3;
  * @return {string}
  */
-proto.Lecture.prototype.getClassId = function() {
+proto.Lecture.prototype.getDescription = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
@@ -2720,17 +2744,35 @@ proto.Lecture.prototype.getClassId = function() {
  * @param {string} value
  * @return {!proto.Lecture} returns this
  */
-proto.Lecture.prototype.setClassId = function(value) {
+proto.Lecture.prototype.setDescription = function(value) {
   return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
 /**
- * repeated string batches = 4;
+ * optional string class_id = 4;
+ * @return {string}
+ */
+proto.Lecture.prototype.getClassId = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.Lecture} returns this
+ */
+proto.Lecture.prototype.setClassId = function(value) {
+  return jspb.Message.setProto3StringField(this, 4, value);
+};
+
+
+/**
+ * repeated string batches = 5;
  * @return {!Array<string>}
  */
 proto.Lecture.prototype.getBatchesList = function() {
-  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 4));
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 5));
 };
 
 
@@ -2739,7 +2781,7 @@ proto.Lecture.prototype.getBatchesList = function() {
  * @return {!proto.Lecture} returns this
  */
 proto.Lecture.prototype.setBatchesList = function(value) {
-  return jspb.Message.setField(this, 4, value || []);
+  return jspb.Message.setField(this, 5, value || []);
 };
 
 
@@ -2749,7 +2791,7 @@ proto.Lecture.prototype.setBatchesList = function(value) {
  * @return {!proto.Lecture} returns this
  */
 proto.Lecture.prototype.addBatches = function(value, opt_index) {
-  return jspb.Message.addToRepeatedField(this, 4, value, opt_index);
+  return jspb.Message.addToRepeatedField(this, 5, value, opt_index);
 };
 
 
@@ -2763,11 +2805,11 @@ proto.Lecture.prototype.clearBatchesList = function() {
 
 
 /**
- * optional uint64 scheduled_at = 5;
+ * optional uint64 scheduled_at = 6;
  * @return {number}
  */
 proto.Lecture.prototype.getScheduledAt = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
 };
 
 
@@ -2776,33 +2818,15 @@ proto.Lecture.prototype.getScheduledAt = function() {
  * @return {!proto.Lecture} returns this
  */
 proto.Lecture.prototype.setScheduledAt = function(value) {
-  return jspb.Message.setProto3IntField(this, 5, value);
+  return jspb.Message.setProto3IntField(this, 6, value);
 };
 
 
 /**
- * optional string institute_id = 6;
+ * optional string institute_id = 7;
  * @return {string}
  */
 proto.Lecture.prototype.getInstituteId = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.Lecture} returns this
- */
-proto.Lecture.prototype.setInstituteId = function(value) {
-  return jspb.Message.setProto3StringField(this, 6, value);
-};
-
-
-/**
- * optional string subject_id = 7;
- * @return {string}
- */
-proto.Lecture.prototype.getSubjectId = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 7, ""));
 };
 
@@ -2811,16 +2835,16 @@ proto.Lecture.prototype.getSubjectId = function() {
  * @param {string} value
  * @return {!proto.Lecture} returns this
  */
-proto.Lecture.prototype.setSubjectId = function(value) {
+proto.Lecture.prototype.setInstituteId = function(value) {
   return jspb.Message.setProto3StringField(this, 7, value);
 };
 
 
 /**
- * optional string faculty_id = 8;
+ * optional string subject_id = 8;
  * @return {string}
  */
-proto.Lecture.prototype.getFacultyId = function() {
+proto.Lecture.prototype.getSubjectId = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 8, ""));
 };
 
@@ -2829,17 +2853,35 @@ proto.Lecture.prototype.getFacultyId = function() {
  * @param {string} value
  * @return {!proto.Lecture} returns this
  */
-proto.Lecture.prototype.setFacultyId = function(value) {
+proto.Lecture.prototype.setSubjectId = function(value) {
   return jspb.Message.setProto3StringField(this, 8, value);
 };
 
 
 /**
- * optional uint32 duration = 9;
+ * optional string faculty_id = 9;
+ * @return {string}
+ */
+proto.Lecture.prototype.getFacultyId = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 9, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.Lecture} returns this
+ */
+proto.Lecture.prototype.setFacultyId = function(value) {
+  return jspb.Message.setProto3StringField(this, 9, value);
+};
+
+
+/**
+ * optional uint32 duration = 10;
  * @return {number}
  */
 proto.Lecture.prototype.getDuration = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 9, 0));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 10, 0));
 };
 
 
@@ -2848,16 +2890,16 @@ proto.Lecture.prototype.getDuration = function() {
  * @return {!proto.Lecture} returns this
  */
 proto.Lecture.prototype.setDuration = function(value) {
-  return jspb.Message.setProto3IntField(this, 9, value);
+  return jspb.Message.setProto3IntField(this, 10, value);
 };
 
 
 /**
- * optional string live_session_id = 10;
+ * optional string live_session_id = 11;
  * @return {string}
  */
 proto.Lecture.prototype.getLiveSessionId = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 10, ""));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 11, ""));
 };
 
 
@@ -2866,51 +2908,33 @@ proto.Lecture.prototype.getLiveSessionId = function() {
  * @return {!proto.Lecture} returns this
  */
 proto.Lecture.prototype.setLiveSessionId = function(value) {
-  return jspb.Message.setProto3StringField(this, 10, value);
+  return jspb.Message.setProto3StringField(this, 11, value);
 };
 
 
 /**
- * optional uint64 created_at = 11;
+ * optional bool is_live = 12;
+ * @return {boolean}
+ */
+proto.Lecture.prototype.getIsLive = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 12, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.Lecture} returns this
+ */
+proto.Lecture.prototype.setIsLive = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 12, value);
+};
+
+
+/**
+ * optional uint64 created_at = 13;
  * @return {number}
  */
 proto.Lecture.prototype.getCreatedAt = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 11, 0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.Lecture} returns this
- */
-proto.Lecture.prototype.setCreatedAt = function(value) {
-  return jspb.Message.setProto3IntField(this, 11, value);
-};
-
-
-/**
- * optional string created_by = 12;
- * @return {string}
- */
-proto.Lecture.prototype.getCreatedBy = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 12, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.Lecture} returns this
- */
-proto.Lecture.prototype.setCreatedBy = function(value) {
-  return jspb.Message.setProto3StringField(this, 12, value);
-};
-
-
-/**
- * optional uint64 updated_at = 13;
- * @return {number}
- */
-proto.Lecture.prototype.getUpdatedAt = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 13, 0));
 };
 
@@ -2919,16 +2943,16 @@ proto.Lecture.prototype.getUpdatedAt = function() {
  * @param {number} value
  * @return {!proto.Lecture} returns this
  */
-proto.Lecture.prototype.setUpdatedAt = function(value) {
+proto.Lecture.prototype.setCreatedAt = function(value) {
   return jspb.Message.setProto3IntField(this, 13, value);
 };
 
 
 /**
- * optional string updated_by = 14;
+ * optional string created_by = 14;
  * @return {string}
  */
-proto.Lecture.prototype.getUpdatedBy = function() {
+proto.Lecture.prototype.getCreatedBy = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 14, ""));
 };
 
@@ -2937,8 +2961,44 @@ proto.Lecture.prototype.getUpdatedBy = function() {
  * @param {string} value
  * @return {!proto.Lecture} returns this
  */
-proto.Lecture.prototype.setUpdatedBy = function(value) {
+proto.Lecture.prototype.setCreatedBy = function(value) {
   return jspb.Message.setProto3StringField(this, 14, value);
+};
+
+
+/**
+ * optional uint64 updated_at = 15;
+ * @return {number}
+ */
+proto.Lecture.prototype.getUpdatedAt = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 15, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.Lecture} returns this
+ */
+proto.Lecture.prototype.setUpdatedAt = function(value) {
+  return jspb.Message.setProto3IntField(this, 15, value);
+};
+
+
+/**
+ * optional string updated_by = 16;
+ * @return {string}
+ */
+proto.Lecture.prototype.getUpdatedBy = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 16, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.Lecture} returns this
+ */
+proto.Lecture.prototype.setUpdatedBy = function(value) {
+  return jspb.Message.setProto3StringField(this, 16, value);
 };
 
 

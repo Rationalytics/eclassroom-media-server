@@ -149,6 +149,7 @@ function _batchDeserializer(batch) {
 function _lectureDeserialization(lec) {
     return {
         id: lec.getId(),
+        title: lec.getTitle(),
         description: lec.getDescription(),
         classId: lec.getClassId(),
         batches: lec.getBatchesList(),
@@ -157,6 +158,7 @@ function _lectureDeserialization(lec) {
         subjectId: lec.getSubjectId(),
         facultyId: lec.getFacultyId(),
         duration: lec.getDuration(),
+        isLive: lec.getIsLive(),
         liveSessionId: lec.getLiveSessionId() || '',
         createdBy: lec.getCreatedBy(),
         createdAt: lec.getCreatedAt() !== 0 ? new Date(lec.getCreatedAt()) : null,

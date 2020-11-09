@@ -39,7 +39,7 @@ module.exports = {
                             const openViduToken = msg.obj.openViduToken;
                             const lectureId = msg.obj.lectureId;
 
-                            myOpenVidu.leaveSession(sessionId, connectionId, lectureId, decoded.userId).then(
+                            myOpenVidu.leaveSession(token, sessionId, connectionId, lectureId, decoded.userId).then(
                                 res => {
                                     
                                 },

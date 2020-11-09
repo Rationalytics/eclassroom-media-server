@@ -12,6 +12,7 @@ const router = express.Router();
 
 const logger = require('../helpers/logger');
 const keys = require('../config/keys');
+const lectureService = require('../services/lecture');
 const OV = new OpenVidu(keys.openViduUrl, keys.openViduSecret);
 
 const utils = require('../helpers/utils');
@@ -144,6 +145,7 @@ router.get('/session/:lectureId/:liveSessionId', (req, res, next) => {
                                 return res.status(500).json({ message: err.details });
                             }
                         } else {
+                            console.log(response.getMessage());
                             const lec = utils.deserializer(response.getLecture(), 'lecture');
                             
                             if (lecSess === undefined) {
@@ -163,6 +165,10 @@ router.get('/session/:lectureId/:liveSessionId', (req, res, next) => {
                                 await cache.set(lectureId, userId, JSON.stringify(cachedSess), lec.duration);
                                 await dynamoDb.addSessInfo(userLecId, lectureId, openviduSess.sessionId, openviduToken);
 
+                                if (tokenOptions.role === OpenViduRole.MODERATOR) {
+                                    await lectureService.toggleLectureStatus(authToken, lectureId, true);
+                                }
+
                                 return res.status(201).json({ message: 'Session created', obj: { token: openviduToken, sessionId: openviduSess.sessionId, }});
                             } else {
                                 // Session already exists, just join it.
@@ -179,6 +185,10 @@ router.get('/session/:lectureId/:liveSessionId', (req, res, next) => {
                                 await cache.set(lectureId, userId, JSON.stringify(cachedSess), lec.duration);
                                 await dynamoDb.addSessInfo(userLecId, lectureId, lecSess.sessionId, openviduToken);
 
+                                if (tokenOptions.role === OpenViduRole.MODERATOR) {
+                                    await lectureService.toggleLectureStatus(authToken, lectureId, true);
+                                }
+
                                 return res.status(201).json({ message: 'Session created', obj: { token: openviduToken, sessionId: lecSess.sessionId, }});
                             }
                         }
@@ -191,6 +201,10 @@ router.get('/session/:lectureId/:liveSessionId', (req, res, next) => {
                         sessionId: sessInfo.Item.sessionId.S,
                         token: sessInfo.Item.token.S
                     };
+
+                    if (tokenOptions.role === OpenViduRole.MODERATOR) {
+                        await lectureService.toggleLectureStatus(authToken, lectureId, true);
+                    }
 
                     await cache.set(lectureId, userId, JSON.stringify(cachedSess));
                     return res.status(201).json({ message: 'Session created', obj: { token: sessInfo.Item.token.S, sessionId: sessInfo.Item.sessionId.S, }});
@@ -427,12 +441,15 @@ router.post('/leave-session', (req, res) => {
 
                                 // delete mapSessions[lectureId];
                                 localCache.delete(lectureId);
+                                await lectureService.toggleLectureStatus(authToken, lectureId, false);
                             }
                         })
                         .catch(async e => {
                             logger.info('Session already deleted');
                             // delete mapSessions[lectureId];
                             localCache.delete(lectureId);
+
+                            await lectureService.toggleLectureStatus(authToken, lectureId, false);
                         })
                         .then(() => {
                             return res.status(200).json({ message: 'User kicked from session' });
@@ -452,6 +469,8 @@ router.post('/leave-session', (req, res) => {
         } catch (err) {
             logger.error(err);
             return res.status(500).json({ message: 'Server error' });
+        } finally {
+            // TODO: set isLive to false
         }
     });
 });
