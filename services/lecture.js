@@ -1,5 +1,7 @@
 'use strict';
 const grpc = require('grpc');
+const path = require('path');
+const fs = require('fs');
 const usersPb = require('../protos/users_pb');
 const usersService = require('../protos/users_grpc_pb');
 const keys = require('../config/keys');
@@ -10,6 +12,13 @@ const dynamoDb = require('../model/DynamoDB');
 const localCache = require('../services/localCache');
 
 const insecureConn = grpc.credentials.createInsecure();
+
+const certPath = path.join('certs', process.env.NODE_ENV);
+const credentials = grpc.credentials.createSsl(
+    fs.readFileSync(path.join(certPath, 'ca.crt')),
+    fs.readFileSync(path.join(certPath, 'client.key')),
+    fs.readFileSync(path.join(certPath, 'client.crt'))
+);
 
 module.exports = {
     async toggleLectureStatus(token, lectureId, flag) {
