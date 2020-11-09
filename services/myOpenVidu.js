@@ -52,11 +52,14 @@ module.exports = {
 
                                 // delete mapSessions[lectureId];
                                 localCache.delete(lectureId);
+                                await lectureService.toggleLectureStatus(authToken, lectureId, false);
                             }
                         })
                         .catch(async e => {
                             logger.info('Session already deleted');
                             localCache.delete(lectureId);
+
+                            await lectureService.toggleLectureStatus(authToken, lectureId, false);
                         })
                         .then(() => {
                             logger.info('User removed from session');
@@ -74,8 +77,6 @@ module.exports = {
             }
         } catch (err) {
             logger.error(err);
-        } finally {
-            await lectureService.toggleLectureStatus(authToken, lectureId, false);
         }
     }
 }
