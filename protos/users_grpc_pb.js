@@ -203,6 +203,28 @@ function deserialize_users_GetStudentSubjectsResponse(buffer_arg) {
   return protos_users_pb.GetStudentSubjectsResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_users_GetStudentsOfLectureRequest(arg) {
+  if (!(arg instanceof protos_users_pb.GetStudentsOfLectureRequest)) {
+    throw new Error('Expected argument of type users.GetStudentsOfLectureRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_users_GetStudentsOfLectureRequest(buffer_arg) {
+  return protos_users_pb.GetStudentsOfLectureRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_users_GetStudentsOfLectureResponse(arg) {
+  if (!(arg instanceof protos_users_pb.GetStudentsOfLectureResponse)) {
+    throw new Error('Expected argument of type users.GetStudentsOfLectureResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_users_GetStudentsOfLectureResponse(buffer_arg) {
+  return protos_users_pb.GetStudentsOfLectureResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_users_GetTeachingStaffRequest(arg) {
   if (!(arg instanceof protos_users_pb.GetTeachingStaffRequest)) {
     throw new Error('Expected argument of type users.GetTeachingStaffRequest');
@@ -446,6 +468,17 @@ var UserServiceService = exports.UserServiceService = {
     requestDeserialize: deserialize_users_GetLectureRequest,
     responseSerialize: serialize_users_LectureLiveSessionIdResponse,
     responseDeserialize: deserialize_users_LectureLiveSessionIdResponse,
+  },
+  getStudentsOfLecture: {
+    path: '/users.UserService/GetStudentsOfLecture',
+    requestStream: false,
+    responseStream: false,
+    requestType: protos_users_pb.GetStudentsOfLectureRequest,
+    responseType: protos_users_pb.GetStudentsOfLectureResponse,
+    requestSerialize: serialize_users_GetStudentsOfLectureRequest,
+    requestDeserialize: deserialize_users_GetStudentsOfLectureRequest,
+    responseSerialize: serialize_users_GetStudentsOfLectureResponse,
+    responseDeserialize: deserialize_users_GetStudentsOfLectureResponse,
   },
   getTeachingStaff: {
     path: '/users.UserService/GetTeachingStaff',

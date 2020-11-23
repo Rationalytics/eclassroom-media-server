@@ -6,13 +6,16 @@ const keys = require('../config/keys');
 const logger = require('../helpers/logger');
 let wss = null;
 
+let socketsDict = {};
+
 module.exports = {
     startWebSocketServer(server) {
         wss = new WebSocket.Server({ server });
 
         wss.on('connection', function connection(ws) {
             logger.info('New connection');
-            // console.log(ws);
+
+            ws.send(JSON.stringify({type: 'ping'}));
             ws.on('message', function incoming(message) {
                 const msg = JSON.parse(message);
 
@@ -33,22 +36,35 @@ module.exports = {
                     if (err) {
                         console.error(err);
                     } else {
-                        if (msgType === 'leave-session') {
-                            const sessionId = msg.obj.sessionId;
-                            const connectionId = msg.obj.connectionId;
-                            const openViduToken = msg.obj.openViduToken;
-                            const lectureId = msg.obj.lectureId;
+                        switch (msgType) {
+                            case 'leave-session':
+                                const sessionId = msg.obj.sessionId;
+                                const connectionId = msg.obj.connectionId;
+                                const openViduToken = msg.obj.openViduToken;
+                                const lectureId = msg.obj.lectureId;
 
-                            myOpenVidu.leaveSession(token, sessionId, connectionId, lectureId, decoded.userId).then(
-                                res => {
-                                    
-                                },
-                                reject => {
-                                    console.log(reject);
-                                }
-                            ).catch(rej => {
-                                console.error(rej);
-                            });
+                                delete socketsDict[decoded.userId];
+
+                                myOpenVidu.leaveSession(token, sessionId, connectionId, lectureId, decoded.userId).then(
+                                    res => {
+                                        
+                                    },
+                                    reject => {
+                                        console.log(reject);
+                                    }
+                                ).catch(rej => {
+                                    console.error(rej);
+                                });
+                                break;
+
+                            case 'pong':
+                                logger.info('Received PONG, adding client websocket to dictionary');
+                                socketsDict[decoded.userId] = ws;
+                                break;
+
+                            case 'attendance':
+                                logger.info('Attendance requested by a user');
+                                break;
                         }
                     }
                 });
@@ -57,7 +73,15 @@ module.exports = {
     },
 
 
-    sendPayload(payload) {
-        
+    sendPayload(payload, userId) {
+        if (userId === null) {
+            // send to all
+        } else {
+            // send to a specific user
+            const socket = socketsDict[userId];
+            socket.send(JSON.stringify(payload), (err) => {
+                logger.error(err);
+            });
+        }
     }
 }
