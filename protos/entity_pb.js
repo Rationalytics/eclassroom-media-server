@@ -2444,7 +2444,7 @@ proto.Lecture.toObject = function(includeInstance, msg) {
     instituteId: jspb.Message.getFieldWithDefault(msg, 7, ""),
     subjectId: jspb.Message.getFieldWithDefault(msg, 8, ""),
     facultyId: jspb.Message.getFieldWithDefault(msg, 9, ""),
-    duration: jspb.Message.getFieldWithDefault(msg, 10, 0),
+    duration: jspb.Message.getFloatingPointFieldWithDefault(msg, 10, 0.0),
     liveSessionId: jspb.Message.getFieldWithDefault(msg, 11, ""),
     isLive: jspb.Message.getBooleanFieldWithDefault(msg, 12, false),
     createdAt: jspb.Message.getFieldWithDefault(msg, 13, 0),
@@ -2524,7 +2524,7 @@ proto.Lecture.deserializeBinaryFromReader = function(msg, reader) {
       msg.setFacultyId(value);
       break;
     case 10:
-      var value = /** @type {number} */ (reader.readUint32());
+      var value = /** @type {number} */ (reader.readFloat());
       msg.setDuration(value);
       break;
     case 11:
@@ -2644,8 +2644,8 @@ proto.Lecture.serializeBinaryToWriter = function(message, writer) {
     );
   }
   f = message.getDuration();
-  if (f !== 0) {
-    writer.writeUint32(
+  if (f !== 0.0) {
+    writer.writeFloat(
       10,
       f
     );
@@ -2877,11 +2877,11 @@ proto.Lecture.prototype.setFacultyId = function(value) {
 
 
 /**
- * optional uint32 duration = 10;
+ * optional float duration = 10;
  * @return {number}
  */
 proto.Lecture.prototype.getDuration = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 10, 0));
+  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 10, 0.0));
 };
 
 
@@ -2890,7 +2890,7 @@ proto.Lecture.prototype.getDuration = function() {
  * @return {!proto.Lecture} returns this
  */
 proto.Lecture.prototype.setDuration = function(value) {
-  return jspb.Message.setProto3IntField(this, 10, value);
+  return jspb.Message.setProto3FloatField(this, 10, value);
 };
 
 
