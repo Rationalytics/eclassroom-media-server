@@ -400,6 +400,11 @@ router.post('/leave-session', (req, res) => {
         return res.status(400).json({ message: 'Please provide a lecture ID' });
     }
 
+    const isModerator = body.isModerator;
+    if (isModerator === '' || isModerator === null || isModerator === undefined) {
+        return res.status(400).json({ message: 'Please specify whether you are a moderator.' });
+    }
+
 
     jwt.verify(authToken, keys.secret, async function(err, decoded) {
         if (err) {
@@ -443,7 +448,10 @@ router.post('/leave-session', (req, res) => {
 
                                 // delete mapSessions[lectureId];
                                 localCache.delete(lectureId);
-                                await lectureService.toggleLectureStatus(authToken, lectureId, false);
+
+                                if (isModerator) {
+                                    await lectureService.toggleLectureStatus(authToken, lectureId, false);
+                                }
                             }
                         })
                         .catch(async e => {
@@ -451,7 +459,9 @@ router.post('/leave-session', (req, res) => {
                             // delete mapSessions[lectureId];
                             localCache.delete(lectureId);
 
-                            await lectureService.toggleLectureStatus(authToken, lectureId, false);
+                            if (isModerator) {
+                                await lectureService.toggleLectureStatus(authToken, lectureId, false);
+                            }
                         })
                         .then(() => {
                             return res.status(200).json({ message: 'User kicked from session' });
@@ -468,6 +478,10 @@ router.post('/leave-session', (req, res) => {
                 console.log(sess);
                 return res.status(404).json({ message: 'Cannot find session.' });
             }
+
+            // if (isModerator) {
+            //     await lectureService.toggleLectureStatus(authToken, lectureId, false);
+            // }
         } catch (err) {
             logger.error(err);
             return res.status(500).json({ message: 'Server error' });

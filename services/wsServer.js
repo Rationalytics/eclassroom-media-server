@@ -45,7 +45,7 @@ module.exports = {
 
                                 delete socketsDict[decoded.userId];
 
-                                myOpenVidu.leaveSession(token, sessionId, connectionId, lectureId, decoded.userId).then(
+                                myOpenVidu.leaveSession(token, sessionId, connectionId, lectureId, decoded.userId, openViduToken).then(
                                     res => {
                                         
                                     },

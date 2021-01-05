@@ -18,7 +18,7 @@ module.exports = {
         }
     },
 
-    async leaveSession(authToken, sessionId, connectionId, lectureId, userId) {
+    async leaveSession(authToken, sessionId, connectionId, lectureId, userId, openViduToken) {
         try {
             const sess = await axios.get(keys.openViduUrl + 'api/sessions/' + sessionId, { headers: { Authorization: utils.getBasicAuth() }});
 
@@ -52,14 +52,19 @@ module.exports = {
 
                                 // delete mapSessions[lectureId];
                                 localCache.delete(lectureId);
-                                await lectureService.toggleLectureStatus(authToken, lectureId, false);
+
+                                if (openViduToken.includes('role=MODERATOR')) {
+                                    await lectureService.toggleLectureStatus(authToken, lectureId, false);
+                                }
                             }
                         })
                         .catch(async e => {
                             logger.info('Session already deleted');
                             localCache.delete(lectureId);
 
-                            await lectureService.toggleLectureStatus(authToken, lectureId, false);
+                            if (openViduToken.includes('role=MODERATOR')) {
+                                await lectureService.toggleLectureStatus(authToken, lectureId, false);
+                            }
                         })
                         .then(() => {
                             logger.info('User removed from session');
