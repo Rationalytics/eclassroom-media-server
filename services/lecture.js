@@ -52,7 +52,7 @@ module.exports = {
      */
     async markAttendance(lectureId, userId, flag) {
         try {
-            logger.info('Marking student ' + studentId + ' as ' + hasJoined ? 'present' : 'absent');
+            logger.info('Marking student ' + userId + ' as ' + hasJoined ? 'present' : 'absent');
             const request = new usersPb.MarkAttendanceRequest();
 
             const client = new usersService.UserServiceClient(keys.operationsServer, process.env.NODE_ENV === 'dev' ? insecureConn : credentials);
