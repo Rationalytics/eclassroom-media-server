@@ -52,7 +52,7 @@ module.exports = {
      */
     async markAttendance(lectureId, userId, flag) {
         try {
-            logger.info('Toggling lecture status');
+            logger.info('Marking student ' + studentId + ' as ' + hasJoined ? 'present' : 'absent');
             const request = new usersPb.MarkAttendanceRequest();
 
             const client = new usersService.UserServiceClient(keys.operationsServer, process.env.NODE_ENV === 'dev' ? insecureConn : credentials);
@@ -61,7 +61,7 @@ module.exports = {
             request.setLectureId(lectureId);
             request.setHasJoined(flag);
 
-            client.setLectureStatus(request, (err, res) => {
+            client.markAttendance(request, (err, res) => {
                 if (err) {
                     logger.error(err);
                 } else {

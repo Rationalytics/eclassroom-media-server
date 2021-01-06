@@ -85,8 +85,6 @@ router.get('/session/:lectureId/:liveSessionId', (req, res, next) => {
         const userId = decoded.userId;
         const user = decoded.user;
 
-        logger.info(JSON.stringify(user));
-
         let role = (user.accessLevel == 0 || user.accessLevel == 1 || user.accessLevel == 2) ? OpenViduRole.MODERATOR : OpenViduRole.PUBLISHER;
 
         let usr = {
