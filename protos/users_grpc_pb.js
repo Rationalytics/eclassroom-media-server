@@ -302,6 +302,28 @@ function deserialize_users_LectureLiveSessionIdResponse(buffer_arg) {
   return protos_users_pb.LectureLiveSessionIdResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_users_MarkAttendanceRequest(arg) {
+  if (!(arg instanceof protos_users_pb.MarkAttendanceRequest)) {
+    throw new Error('Expected argument of type users.MarkAttendanceRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_users_MarkAttendanceRequest(buffer_arg) {
+  return protos_users_pb.MarkAttendanceRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_users_MarkAttendanceResponse(arg) {
+  if (!(arg instanceof protos_users_pb.MarkAttendanceResponse)) {
+    throw new Error('Expected argument of type users.MarkAttendanceResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_users_MarkAttendanceResponse(buffer_arg) {
+  return protos_users_pb.MarkAttendanceResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_users_ScheduleLectureRequest(arg) {
   if (!(arg instanceof protos_users_pb.ScheduleLectureRequest)) {
     throw new Error('Expected argument of type users.ScheduleLectureRequest');
@@ -556,6 +578,17 @@ var UserServiceService = exports.UserServiceService = {
     requestDeserialize: deserialize_users_GetSignedUploadUrlRequest,
     responseSerialize: serialize_users_GetSignedUploadUrlResponse,
     responseDeserialize: deserialize_users_GetSignedUploadUrlResponse,
+  },
+  markAttendance: {
+    path: '/users.UserService/MarkAttendance',
+    requestStream: false,
+    responseStream: false,
+    requestType: protos_users_pb.MarkAttendanceRequest,
+    responseType: protos_users_pb.MarkAttendanceResponse,
+    requestSerialize: serialize_users_MarkAttendanceRequest,
+    requestDeserialize: deserialize_users_MarkAttendanceRequest,
+    responseSerialize: serialize_users_MarkAttendanceResponse,
+    responseDeserialize: deserialize_users_MarkAttendanceResponse,
   },
 };
 

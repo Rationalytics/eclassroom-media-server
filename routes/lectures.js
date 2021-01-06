@@ -147,7 +147,6 @@ router.get('/session/:lectureId/:liveSessionId', (req, res, next) => {
                                 return res.status(500).json({ message: err.details });
                             }
                         } else {
-                            console.log(response.getMessage());
                             const lec = utils.deserializer(response.getLecture(), 'lecture');
                             
                             if (lecSess === undefined) {
@@ -171,6 +170,10 @@ router.get('/session/:lectureId/:liveSessionId', (req, res, next) => {
                                     await lectureService.toggleLectureStatus(authToken, lectureId, true);
                                 }
 
+                                if (usr.userType === 'student') {
+                                    await lectureService.markAttendance(lectureId, userId, true);
+                                }
+
                                 return res.status(201).json({ message: 'Session created', obj: { token: openviduToken, sessionId: openviduSess.sessionId, }});
                             } else {
                                 // Session already exists, just join it.
@@ -191,6 +194,10 @@ router.get('/session/:lectureId/:liveSessionId', (req, res, next) => {
                                     await lectureService.toggleLectureStatus(authToken, lectureId, true);
                                 }
 
+                                if (usr.userType === 'student') {
+                                    await lectureService.markAttendance(lectureId, userId, true);
+                                }
+
                                 return res.status(201).json({ message: 'Session created', obj: { token: openviduToken, sessionId: lecSess.sessionId, }});
                             }
                         }
@@ -209,10 +216,17 @@ router.get('/session/:lectureId/:liveSessionId', (req, res, next) => {
                     }
 
                     await cache.set(lectureId, userId, JSON.stringify(cachedSess));
+
+                    if (usr.userType === 'student') {
+                        await lectureService.markAttendance(lectureId, userId, true);
+                    }
                     return res.status(201).json({ message: 'Session created', obj: { token: sessInfo.Item.token.S, sessionId: sessInfo.Item.sessionId.S, }});
                 }
             } else {
                 logger.info('Returning cached session ID and openvidu token');
+                if (usr.userType === 'student') {
+                    await lectureService.markAttendance(lectureId, userId, true);
+                }
                 return res.status(201).json({ message: 'Session created', obj: { token: lecture.token, sessionId: lecture.sessionId, }});
             }
         } catch (error) {

@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const myOpenVidu = require('./myOpenVidu');
 const keys = require('../config/keys');
 const logger = require('../helpers/logger');
+const lectureService = require('./lecture');
 let wss = null;
 
 let socketsDict = {};
@@ -46,8 +47,8 @@ module.exports = {
                                 delete socketsDict[decoded.userId];
 
                                 myOpenVidu.leaveSession(token, sessionId, connectionId, lectureId, decoded.userId, openViduToken).then(
-                                    res => {
-                                        
+                                    async res => {
+                                        await lectureService.markAttendance(lectureId, decoded.userId, false);
                                     },
                                     reject => {
                                         console.log(reject);

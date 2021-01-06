@@ -43,4 +43,33 @@ module.exports = {
             logger.error(err);
         }
     },
+
+    /**
+     * @description Makes a request to the operations server to mark attendance
+     * @param {string} lectureId Lecture ID
+     * @param {string} userId Student user ID
+     * @param {boolean} flag true if joining the lecture else false
+     */
+    async markAttendance(lectureId, userId, flag) {
+        try {
+            logger.info('Toggling lecture status');
+            const request = new usersPb.MarkAttendanceRequest();
+
+            const client = new usersService.UserServiceClient(keys.operationsServer, process.env.NODE_ENV === 'dev' ? insecureConn : credentials);
+
+            request.setStudentId(userId);
+            request.setLectureId(lectureId);
+            request.setHasJoined(flag);
+
+            client.setLectureStatus(request, (err, res) => {
+                if (err) {
+                    logger.error(err);
+                } else {
+                    logger.info(res);
+                }
+            })
+        } catch (err) {
+            logger.error(err);
+        }
+    },
 }
