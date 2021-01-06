@@ -71,6 +71,28 @@ function deserialize_users_FacultySignUpResponse(buffer_arg) {
   return protos_users_pb.FacultySignUpResponse.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_users_GetLectureAttendanceRequest(arg) {
+  if (!(arg instanceof protos_users_pb.GetLectureAttendanceRequest)) {
+    throw new Error('Expected argument of type users.GetLectureAttendanceRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_users_GetLectureAttendanceRequest(buffer_arg) {
+  return protos_users_pb.GetLectureAttendanceRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_users_GetLectureAttendanceResponse(arg) {
+  if (!(arg instanceof protos_users_pb.GetLectureAttendanceResponse)) {
+    throw new Error('Expected argument of type users.GetLectureAttendanceResponse');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_users_GetLectureAttendanceResponse(buffer_arg) {
+  return protos_users_pb.GetLectureAttendanceResponse.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_users_GetLectureRequest(arg) {
   if (!(arg instanceof protos_users_pb.GetLectureRequest)) {
     throw new Error('Expected argument of type users.GetLectureRequest');
@@ -589,6 +611,17 @@ var UserServiceService = exports.UserServiceService = {
     requestDeserialize: deserialize_users_MarkAttendanceRequest,
     responseSerialize: serialize_users_MarkAttendanceResponse,
     responseDeserialize: deserialize_users_MarkAttendanceResponse,
+  },
+  getLectureAttendance: {
+    path: '/users.UserService/GetLectureAttendance',
+    requestStream: false,
+    responseStream: false,
+    requestType: protos_users_pb.GetLectureAttendanceRequest,
+    responseType: protos_users_pb.GetLectureAttendanceResponse,
+    requestSerialize: serialize_users_GetLectureAttendanceRequest,
+    requestDeserialize: deserialize_users_GetLectureAttendanceRequest,
+    responseSerialize: serialize_users_GetLectureAttendanceResponse,
+    responseDeserialize: deserialize_users_GetLectureAttendanceResponse,
   },
 };
 
