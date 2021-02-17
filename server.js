@@ -53,4 +53,4 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500).json({ message: 'Something went wrong with the server.' });
 });
 
-console.log('Listening on port ' + 5000);
+console.log('Listening on port ' + 5000 + ' in ' + process.env.NODE_ENV);
