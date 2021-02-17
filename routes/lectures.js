@@ -65,6 +65,7 @@ router.use('/', function(req, res, next) {
  */
 router.get('/session/:lectureId/:liveSessionId', (req, res, next) => {
     const authToken = req.headers.authorization.split(' ')[1];
+    logger.info(authToken);
 
     const lectureId = req.params['lectureId'];
     if (lectureId === null || lectureId === '' || lectureId === undefined) {
