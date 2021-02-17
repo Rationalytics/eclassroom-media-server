@@ -7,8 +7,8 @@
     "start": "node server.js",
     "dev": "NODE_ENV='dev' NODE_TLS_REJECT_UNAUTHORIZED='0' nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "demo": "NODE_ENV='demo' NODE_TLS_REJECT_UNAUTHORIZED='0' pm2 start server.js",
     "prod": "NODE_ENV='prod' NODE_TLS_REJECT_UNAUTHORIZED='0' pm2 start server.js",
+    "demo": "NODE_ENV='demo' NODE_TLS_REJECT_UNAUTHORIZED='0' pm2 start server.js",
     "migrate": "node ./migration/seed.js"
   },
   "repository": {
